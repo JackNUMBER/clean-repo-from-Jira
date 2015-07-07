@@ -64,7 +64,6 @@ foreach ($branches as $branch) {
             // parse API response
             $issue_datas = json_decode($result);
 
-            // if ($issue_datas->fields->resolution['name'] !== null) {
             if (
                 $issue_datas->fields->resolution !== null
                 && in_array($issue_datas->fields->resolution->name, $resolution_cases)
