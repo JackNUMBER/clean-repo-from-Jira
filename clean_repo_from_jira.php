@@ -81,28 +81,26 @@ foreach ($branches as $branch) {
     }
 }
 
+// stop curl
+curl_close($ch);
+
 // user confirmation
-echo '' . "\n";
+echo "\n";
 echo count($branches_to_delete) . ' branch(es) will be deleted, continue? (y/n) ';
 $input = fgetc(STDIN);
-
-// user feedback
-echo "\033[36m" . 'Deleting branches...' . "\033[0m\n";
 
 if (
     $input == 'y'
     || $input == 'yes'
 ) {
+    // user feedback
+    echo "\033[36m" . 'Deleting branches...' . "\033[0m\n";
 
     foreach ($branches_to_delete as $branch) {
         // delete branch
         exec('git branch -D ' . $branch);
     }
+
+    // user feedback
+    echo "\033[36m" . 'Finished.' . "\033[0m\n";
 }
-
-// stop curl
-curl_close($ch);
-
-// user feedback
-echo "\033[36m" . 'Finished.' . "\033[0m\n";
-?>
