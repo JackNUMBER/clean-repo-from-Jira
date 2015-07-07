@@ -5,3 +5,5 @@ It uses the Jira REST API with cUrl.
 Branches need to be named like this: **ISSUE-ID_short-description**
 
 Launch it in your terminal with: `php clean_repo_from_jira.php`
+
+You can use verbose mode with: `php clean_repo_from_jira.php -verbose`
