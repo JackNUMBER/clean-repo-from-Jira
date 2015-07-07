@@ -57,7 +57,7 @@ if ($verbose) {
 // list Git branches
 exec('git branch', $branches);
 
-// user display
+// user feedback
 echo "\033[36m" . 'Searching issues, please wait...' . "\033[0m\n";
 
 foreach ($branches as $branch) {
@@ -107,7 +107,7 @@ foreach ($branches as $branch) {
                 }
             }
         }
-        
+
         if ($verbose) {
             // add a separation between each issue
             echo "\n";
@@ -118,28 +118,34 @@ foreach ($branches as $branch) {
 // stop curl
 curl_close($ch);
 
-// user confirmation
-echo count($branches_to_delete) . ' branch(es) will be deleted, continue? (y/n) ';
-$input = fgetc(STDIN);
+// if to-delete list is not empty
+if (count($branches_to_delete) < 0) {
+    // user confirmation
+    echo count($branches_to_delete) . ' branch(es) will be deleted, continue? (y/n) ';
+    $input = fgetc(STDIN);
 
-if (
-    $input == 'y'
-    || $input == 'yes'
-) {
-    // user feedback
-    echo "\033[36m" . 'Deleting branches...' . "\033[0m\n";
+    if (
+        $input == 'y'
+        || $input == 'yes'
+    ) {
+        // user feedback
+        echo "\033[36m" . 'Deleting branches...' . "\033[0m\n";
 
-    foreach ($branches_to_delete as $branch) {
-        if ($verbose) {
-            echo 'Deleting ' . $branch . ' with `git branch -D`.' . "\n";
+        foreach ($branches_to_delete as $branch) {
+            if ($verbose) {
+                echo 'Deleting ' . $branch . ' with `git branch -D`.' . "\n";
+            }
+
+            // delete branch
+            exec('git branch -D ' . $branch);
         }
 
-        // delete branch
-        exec('git branch -D ' . $branch);
+        // user feedback
+        echo "\033[36m" . 'Finished.' . "\033[0m\n";
     }
-
+} else {
     // user feedback
-    echo "\033[36m" . 'Finished.' . "\033[0m\n";
+    echo "\033[36m" . 'No branch to delete.' . "\033[0m\n";
 }
 
 ?>
