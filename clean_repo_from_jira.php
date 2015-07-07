@@ -100,13 +100,17 @@ foreach ($branches as $branch) {
                 ) {
                     if ($verbose) {
                         echo 'Issue is Done, add ' . trim($branch) . ' to the to-delete list.' . "\n";
-                        echo "\n";
                     }
 
                     // fill waiting list
                     $branches_to_delete[] = trim($branch);
                 }
             }
+        }
+        
+        if ($verbose) {
+            // add a separation between each issue
+            echo "\n";
         }
     }
 }
