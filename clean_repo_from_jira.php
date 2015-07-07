@@ -6,7 +6,7 @@
 
 // define Jira settings
 $username = 'xxxxx'; // Jira account username
-$password = 'xxxxx'; // Jira account  pass
+$password = 'xxxxx'; // Jira account pass
 
 $url = 'https://xxxxxxxxxx.net/rest/api/latest/issue/';
 
@@ -17,7 +17,6 @@ $resolution_cases = array(
 
 // define pattern: match with the first occurence of "(anything)_"
 $rejex_pattern = '/(.*?)_/';
-$issue_names = array();
 
 // curl init
 $ch = curl_init();
@@ -70,14 +69,9 @@ foreach ($branches as $branch) {
                 $issue_datas->fields->resolution !== null
                 && in_array($issue_datas->fields->resolution->name, $resolution_cases)
             ) {
-                // issue done
-                echo $current_issue . ' : terminé' . "\n";
-
-                // delete branch
+                // issue done delete the branch
                 exec('git branch -D ' . $branch);
-            } else {
-                // issue not done
-                // echo $issue . ' : pas terminé' . "\n";
+                echo $branch . ' deleted' . "\n";
             }
         }
     }
