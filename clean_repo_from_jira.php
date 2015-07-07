@@ -18,6 +18,8 @@ $resolution_cases = array(
 // define pattern: match with the first occurence of "(anything)_"
 $rejex_pattern = '/(.*?)_/';
 
+$branches_to_delete = array();
+
 // curl init
 $ch = curl_init();
 
@@ -39,7 +41,7 @@ curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
 exec('git branch', $branches);
 
 // user display
-echo "\033[36m" . 'Searching Done issue' . "\033[0m\n";
+echo "\033[36m" . 'Searching Done issue...' . "\033[0m\n";
 
 foreach ($branches as $branch) {
     // clean current branch name
@@ -51,8 +53,8 @@ foreach ($branches as $branch) {
     }
     // check matches
     if (preg_match($rejex_pattern, $branch, $matches)) {
-        $current_issue = trim($matches[1]);
-        curl_setopt($ch, CURLOPT_URL, $url . $current_issue);
+        $issue_name = trim($matches[1]);
+        curl_setopt($ch, CURLOPT_URL, $url . $issue_name);
 
         // ask API
         $result = curl_exec($ch);
@@ -69,13 +71,34 @@ foreach ($branches as $branch) {
                 && in_array($issue_datas->fields->resolution->name, $resolution_cases)
             ) {
                 // issue done delete the branch
-                exec('git branch -D ' . $branch);
-                echo $branch . ' deleted' . "\n";
+                $branches_to_delete[] = trim($branch);
             }
         }
     }
 }
 
+// user confirmation
+echo '' . "\n";
+echo count($branches_to_delete) . ' branch(es) will be deleted, continue? (y/n) ';
+$input = fgetc(STDIN);
+
+// user feedback
+echo "\033[36m" . 'Deleting branches...' . "\033[0m\n";
+
+if (
+    $input == 'y'
+    || $input == 'yes'
+) {
+
+    foreach ($branches_to_delete as $branch) {
+        // delete branch
+        exec('git branch -D ' . $branch);
+    }
+}
+
 // stop curl
 curl_close($ch);
+
+// user feedback
+echo "\033[36m" . 'Finished.' . "\033[0m\n";
 ?>
