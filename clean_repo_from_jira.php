@@ -66,12 +66,16 @@ foreach ($branches as $branch) {
             // parse API response
             $issue_datas = json_decode($result);
 
-            if (
-                $issue_datas->fields->resolution !== null
-                && in_array($issue_datas->fields->resolution->name, $resolution_cases)
-            ) {
-                // issue done delete the branch
-                $branches_to_delete[] = trim($branch);
+            // if issue exists
+            if (empty($issue_datas->errorMessages)) {
+                // if issue is Done
+                if (
+                    $issue_datas->fields->resolution !== null
+                    && in_array($issue_datas->fields->resolution->name, $resolution_cases)
+                ) {
+                    // fill waiting list
+                    $branches_to_delete[] = trim($branch);
+                }
             }
         }
     }
