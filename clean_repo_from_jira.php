@@ -82,7 +82,7 @@ foreach ($branches as $branch) {
         $ch_error = curl_error($ch);
 
         if ($ch_error) {
-            echo 'cURL Error: $ch_error';
+            echo 'cURL Error: ' . $ch_error . "\n";
         } else {
             // parse API response
             $issue_datas = json_decode($result);
